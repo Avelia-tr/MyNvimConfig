@@ -6,7 +6,7 @@
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Exit more easily
-vim.keymap.set("n", "<leader>;e", vim.cmd.Ex, { desc = "Explore" })
+vim.keymap.set("n", "<leader>;e", vim.cmd.Oil, { desc = "Explore" })
 
 -- Diagnostic keymaps
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
