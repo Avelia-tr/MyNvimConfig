@@ -32,3 +32,5 @@ require("lazy").setup({
 		},
 	},
 })
+
+require("Avelia.pluginsSetup")

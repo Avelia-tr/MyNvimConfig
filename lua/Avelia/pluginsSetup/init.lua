@@ -1,0 +1,1 @@
+require("Avelia.pluginsSetup.harpoon")
