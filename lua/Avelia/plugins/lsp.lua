@@ -13,7 +13,7 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
-		vim.g.showDocumentation = true
+		vim.g.showDocumentation = false
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 			callback = function(event)
