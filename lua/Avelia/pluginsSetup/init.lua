@@ -1,1 +1,5 @@
 require("Avelia.pluginsSetup.harpoon")
+require("Avelia.pluginsSetup.clangd")
+require("Avelia.pluginsSetup.hlsl-lsp")
+require("Avelia.pluginsSetup.treesitter-options")
+require("Avelia.pluginsSetup.lsp")

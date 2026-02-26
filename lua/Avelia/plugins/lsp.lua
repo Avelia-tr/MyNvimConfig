@@ -101,6 +101,8 @@ return {
 				-- code, if the language server you are using supports them
 				--
 				-- This may be unwanted, since they displace some of your code
+				vim.lsp.inlay_hint.enable(true)
+
 				if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
 					map("<leader>th", function()
 						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
@@ -111,13 +113,12 @@ return {
 
 		-- Change diagnostic symbols in the sign column (gutter)
 		-- if vim.g.have_nerd_font then
-		--   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
-		--   local diagnostic_signs = {}
-		--   for type, icon in pairs(signs) do
-		--     diagnostic_signs[vim.diagnostic.severity[type]] = icon
-		--   end
-		--   vim.diagnostic.config { signs = { text = diagnostic_signs } }
-		-- end
+		local signs = { ERROR = "", WARN = "", INFO = "", HINT = "" }
+		local diagnostic_signs = {}
+		for type, icon in pairs(signs) do
+			diagnostic_signs[vim.diagnostic.severity[type]] = icon
+		end
+		vim.diagnostic.config({ signs = { text = diagnostic_signs } })
 
 		-- LSP servers and clients are able to communicate to each other what features they support.
 		--  By default, Neovim doesn't support everything that is in the LSP specification.
@@ -125,6 +126,21 @@ return {
 		--  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+
+		--require("lspconfig").gdscript.setup({})
+
+		vim.lsp.config["gdscript"] = {
+			name = "godot",
+
+			-- Fill in your Godot Language Server parameters
+			cmd = vim.lsp.rpc.connect("127.0.0.1", 6005),
+
+			-- Fill in where should Neovim listen to Godot LSP
+			-- In this case, "/tmp/godot.pipe"
+			on_init = function(client, init_result)
+				vim.fn.serverstart("/tmp/godot.pipe")
+			end,
+		}
 
 		-- Enable the following language servers
 		--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -136,7 +152,9 @@ return {
 		--  - settings (table): Override the default settings passed when initializing the server.
 		--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 		local servers = {
-			-- clangd = {},
+			clangd = {
+				arguments = { "-std=c++20" },
+			},
 			-- gopls = {},
 			-- pyright = {},
 			-- rust_analyzer = {},
@@ -147,7 +165,6 @@ return {
 			--
 			-- But for many setups, the LSP (`ts_ls`) will work just fine
 			-- ts_ls = {},
-
 			lua_ls = {
 				-- cmd = { ... },
 				-- filetypes = { ... },
@@ -177,7 +194,7 @@ return {
 		--
 		-- You can add other tools here that you want Mason to install
 		-- for you, so that they are available from within Neovim.
-		local ensure_installed = vim.tbl_keys(servers or {})
+		local ensure_installed = vim.tbl_keys(servers)
 		vim.list_extend(ensure_installed, {
 			"stylua", -- Used to format Lua code
 		})
